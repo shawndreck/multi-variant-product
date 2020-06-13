@@ -1,0 +1,52 @@
+version: "3.7"
+services:
+  # App
+  app:
+    build:
+      args:
+        user: maxwell
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: agrolab
+    container_name: agrolab-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - agrolab
+
+  # Database
+  db:
+    image: mysql:5.7
+    container_name: agrolab-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - agrolab
+
+  #Web server
+  nginx:
+    image: nginx:1.17-alpine
+    container_name: agrolab-nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+      - ./:/var/www
+    networks:
+      - agrolab
+
+networks:
+  agrolab:
+    driver: bridge
