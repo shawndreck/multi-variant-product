@@ -20,6 +20,9 @@ class CreateOptionValuesTable extends Migration
             $table->string('value');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('option_id')->references('id')->on('options');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 

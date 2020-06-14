@@ -20,6 +20,11 @@ class CreateVariantsTable extends Migration
             $table->foreignId('option_value_id');
             $table->foreignId('product_id');
             $table->timestamps();
+
+            $table->foreign('sku_id')->references('id')->on('skus');
+            $table->foreign('option_id')->references('id')->on('options');
+            $table->foreign('option_value_id')->references('id')->on('option_values');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 

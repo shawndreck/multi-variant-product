@@ -24,6 +24,7 @@ class CreateSkusTable extends Migration
             $table->timestamps();
 
             $table->index(['price', 'currency']);
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 
